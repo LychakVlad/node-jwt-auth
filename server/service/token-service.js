@@ -26,8 +26,7 @@ class TokenService {
         'UPDATE tokens SET refreshToken = $1 WHERE user_id = $2',
         [refreshToken, userId]
       );
-      tokenData.refreshToken = refreshToken;
-      return tokenData.save();
+      return newRefreshToken;
     }
     const token = await db.query(
       'INSERT INTO tokens (user_id, refreshToken) values ($1,$2)',
