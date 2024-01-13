@@ -24,7 +24,10 @@ class UserService {
       [email, hashPassword, activationLink]
     );
 
-    await mailService.sendActivationMail(email, activationLink);
+    await mailService.sendActivationMail(
+      email,
+      `${process.env.API_URL}/api/activate/${activationLink}`
+    );
 
     const userDto = new UserDto(user.rows[0]);
     const tokens = tokenService.generateTokens({ ...userDto });
@@ -34,6 +37,22 @@ class UserService {
       ...tokens,
       user: userDto,
     };
+  }
+
+  async activate(activationLink) {
+    const user = await db.query(
+      'SELECT * FROM users WHERE activationLink = $1',
+      [activationLink]
+    );
+
+    if (!user.rows[0]) {
+      throw new Error('Activation link is incorrect');
+    }
+
+    await db.query('UPDATE users SET isActivated = $1 WHERE user_id = $2', [
+      true,
+      user.rows[0].user_id,
+    ]);
   }
 }
 
