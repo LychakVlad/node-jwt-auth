@@ -4,7 +4,7 @@ const db = require('../db');
 class TokenService {
   generateTokens(payload) {
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: '30m',
+      expiresIn: '30s',
     });
     const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
       expiresIn: '30d',
@@ -66,8 +66,7 @@ class TokenService {
       'SELECT * FROM tokens WHERE refreshToken = $1',
       [refreshToken]
     );
-    console.log(tokenData);
-    return tokenData;
+    return tokenData.rows[0];
   }
 }
 

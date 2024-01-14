@@ -112,6 +112,11 @@ class UserService {
       user: userDto,
     };
   }
+
+  async getAllUsers() {
+    const users = await db.query('SELECT * FROM users');
+    return users;
+  }
 }
 
 module.exports = new UserService();
