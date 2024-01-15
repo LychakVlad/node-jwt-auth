@@ -15,8 +15,6 @@ function App() {
     }
   }, []);
 
-  console.log(users);
-
   async function getUsers() {
     try {
       const response = await UserService.fetchUsers();
@@ -31,7 +29,12 @@ function App() {
   }
 
   if (!store.isAuth) {
-    return <LoginForm />;
+    return (
+      <>
+        <LoginForm />
+        <button onClick={getUsers}>Get users</button>
+      </>
+    );
   }
 
   return (
@@ -40,6 +43,11 @@ function App() {
         {store.isAuth
           ? `User authenticated  ${store.user.email}`
           : 'PLEASE LOG IN'}
+      </h1>
+      <h1>
+        {store.user.isActivated
+          ? `Account is activated`
+          : 'Please activate the account'}
       </h1>
       <button onClick={() => store.logout()}>Log out</button>
       <div>
